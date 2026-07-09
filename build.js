@@ -1,6 +1,6 @@
 // my-blog 정적 사이트 빌드 스크립트
 // content/*.md  ->  dist/(index, posts, tags, feed.xml, assets)
-import { readdir, readFile, writeFile, mkdir, rm, copyFile } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir, rm, copyFile, cp } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,6 +20,7 @@ const CONTENT_DIR = path.join(__dirname, "content");
 const DIST_DIR = path.join(__dirname, "dist");
 const STYLES_DIR = path.join(__dirname, "src", "styles");
 const SCRIPTS_DIR = path.join(__dirname, "src", "scripts");
+const APPS_DIR = path.join(__dirname, "apps");
 
 marked.setOptions({ gfm: true, breaks: false });
 
@@ -180,8 +181,20 @@ async function build() {
   await copyDir(STYLES_DIR, assetsDir);
   await copyDir(SCRIPTS_DIR, assetsDir);
 
+  // 웹앱 복사: /apps/**  ->  dist/apps/** (개발 문서 .md 는 배포 제외)
+  let appCount = 0;
+  if (existsSync(APPS_DIR)) {
+    await cp(APPS_DIR, path.join(DIST_DIR, "apps"), {
+      recursive: true,
+      filter: (src) => !src.endsWith(".md"),
+    });
+    appCount = (await readdir(APPS_DIR, { withFileTypes: true })).filter((d) =>
+      d.isDirectory()
+    ).length;
+  }
+
   console.log(
-    `✓ 빌드 완료: 글 ${posts.length}개, 태그 ${byTag.size}개 → dist/`
+    `✓ 빌드 완료: 글 ${posts.length}개, 태그 ${byTag.size}개, 앱 ${appCount}개 → dist/`
   );
 }
 

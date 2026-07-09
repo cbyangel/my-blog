@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>2048</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game">
+    <header class="header">
+      <div class="titlebar">
+        <h1 class="title">2048</h1>
+        <div class="scores">
+          <div class="score-box">
+            <span class="score-label">SCORE</span>
+            <span class="score-value" id="score">0</span>
+          </div>
+          <div class="score-box">
+            <span class="score-label">BEST</span>
+            <span class="score-value" id="best">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="subbar">
+        <p class="intro">같은 숫자 타일을 합쳐 <strong>2048</strong>을 만드세요!</p>
+        <button type="button" class="btn-new" id="new-game">New Game</button>
+      </div>
+    </header>
+
+    <div class="grid-container" id="grid-container">
+      <div class="grid-bg" aria-hidden="true">
+        <!-- 16 배경 셀은 JS에서 생성 -->
+      </div>
+      <div class="tile-layer" id="tile-layer" role="grid" aria-label="2048 게임 보드"></div>
+
+      <div class="overlay" id="overlay" hidden>
+        <p class="overlay-msg" id="overlay-msg"></p>
+        <div class="overlay-actions" id="overlay-actions"></div>
+      </div>
+    </div>
+
+    <p class="hint">방향키 또는 WASD, 모바일은 스와이프로 이동하세요.</p>
+  </main>
+
+  <script defer src="game.js"></script>
+</body>
+</html>

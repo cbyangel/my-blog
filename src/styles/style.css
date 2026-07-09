@@ -326,6 +326,80 @@ a:hover {
 }
 
 /* ============================================================
+   웹앱 포트폴리오 섹션
+   ============================================================ */
+.apps {
+  margin-bottom: 3rem;
+}
+.app-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+.app-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, var(--bg-elev), var(--bg-elev-2));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.app-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--neon-rgb), 0.55);
+  box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.22);
+}
+/* 미리보기: 실제 앱을 iframe으로 띄우되 클릭은 링크로 통과시킨다 */
+.app-card__preview {
+  display: block;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  background: #04050a;
+}
+.app-card__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none; /* 미리보기이므로 상호작용 차단, 클릭은 부모 <a>로 */
+}
+.app-card__body {
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+.app-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+.app-card__title a {
+  color: var(--text);
+}
+.app-card__title a:hover {
+  color: var(--neon);
+}
+.app-card__desc {
+  margin: 0 0 0.8rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.app-card__cta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+/* ============================================================
    글 페이지 & 본문(prose)
    ============================================================ */
 .post {
