@@ -34,12 +34,12 @@ export function layout({ title, description = "", content, root = "", siteTitle 
   <meta property="og:type" content="website" />
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(siteTitle)}" href="${root}feed.xml" />
   <link rel="stylesheet" href="${assets}/style.css" />
-  <!-- FOUC 방지: 저장된 테마를 렌더 전에 <html>에 반영 -->
+  <!-- FOUC 방지: 저장된 네온 액센트를 렌더 전에 <html>에 반영 -->
   <script>
     (function () {
       try {
-        var t = localStorage.getItem("theme");
-        if (t) document.documentElement.setAttribute("data-theme", t);
+        var a = localStorage.getItem("accent");
+        if (a) document.documentElement.setAttribute("data-accent", a);
       } catch (e) {}
     })();
   </script>
@@ -53,8 +53,8 @@ export function layout({ title, description = "", content, root = "", siteTitle 
         id="theme-toggle"
         class="theme-toggle"
         type="button"
-        aria-label="다크 모드 전환"
-        title="테마 전환"
+        aria-label="네온 색상 전환"
+        title="네온 색상 전환 (시안 ↔ 마젠타)"
       >
         <span class="theme-toggle__icon" aria-hidden="true"></span>
       </button>
