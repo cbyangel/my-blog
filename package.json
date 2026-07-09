@@ -1,0 +1,13 @@
+{
+  "name": "my-blog",
+  "version": "1.0.0",
+  "description": "마크다운을 정적 블로그 웹사이트로 변환하는 프레임워크 없는 SSG",
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node dev.js"
+  },
+  "devDependencies": {
+    "marked": "^12.0.0"
+  }
+}
