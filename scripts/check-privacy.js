@@ -8,10 +8,11 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONTENT = join(__dirname, '..', 'content');
 
-// 개인 자산 금액을 가리키는 맥락어
-const CONTEXT = /(입금\s*금?액|납입|평가\s*금?액|평가액|보유\s*금?액|잔고|투자\s*원금|총\s*자산|자산\s*총액|총액|매입\s*금액|계좌\s*잔액)/;
-// 금액 패턴: 큰 숫자+원 / ₩ / 만원 / 억(원) / KRW
-const MONEY = /(₩\s*\d[\d,]*)|(\d[\d,]{2,}\s*원)|(\d[\d,]*\s*만\s*원)|(\d[\d,]*\s*억\s*원?)|(KRW\s*\d[\d,]*)/;
+// 개인 자산 금액을 가리키는 맥락어 (개인 포트폴리오 특화 — 거시지표 오탐 방지)
+// 주의: "외환보유액" 등 공개 거시지표와 겹치지 않도록 "보유액" 단독은 제외하고 "보유금액"만 인정.
+const CONTEXT = /(입금\s*금액|납입\s*금?액|평가\s*금액|평가액|보유\s*금액|매입\s*금액|매입\s*단가|투자\s*원금|계좌\s*잔[액고]|잔고|내\s*자산|보유\s*좌수)/;
+// 금액 패턴: 원화(₩/원/만원/억원/조원/KRW)만. 공개 거시지표는 대부분 달러/포인트라 제외됨.
+const MONEY = /(₩\s*\d[\d,]*)|(\d[\d,]{2,}\s*원)|(\d[\d,]*\s*만\s*원)|(\d[\d,]*\s*억\s*원)|(\d[\d,]*\s*조\s*원)|(KRW\s*\d[\d,]*)/;
 
 function walk(dir) {
   const out = [];
