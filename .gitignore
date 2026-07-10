@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.DS_Store
+
+# 중간 초안(발행 안 함) — 개인정보 검사를 우회할 수 있으므로 커밋 금지
+content/reports/_parts/
+
+# 포트폴리오 원본/다운로드 자료 — 절대 커밋 금지
+portfolio/
+*.portfolio.json
+data/portfolio*
+연금펀드*
+*연금*.xlsx
+*연금*.csv
