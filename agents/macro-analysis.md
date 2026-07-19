@@ -122,8 +122,11 @@ output: content/reports/_parts/{주차}/macro.md
 - 펀드 순유출(-) → 약세 신호
 - 마진잔액 극고점 + 펀드 순유출 → 조정 위험
 
-#### 3. 귀금속 가격 추이 (금/은/구리)
-**데이터 출처**: KITCO, 런던금속거래소(LME), Macro Trends, FRED
+#### 3. 귀금속 선물 시세 (금/은/구리)
+**데이터 출처**: COMEX Futures (CME)
+- 금(GC): USD/troy oz
+- 은(SI): USD/troy oz  
+- 구리(HG): USD/lb
 
 | 기간 | 금(USD/oz) | 은(USD/oz) | 구리(USD/lb) | 신호 |
 |------|------|------|------|------|
