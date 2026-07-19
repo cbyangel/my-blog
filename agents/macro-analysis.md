@@ -122,28 +122,40 @@ output: content/reports/_parts/{주차}/macro.md
 - 펀드 순유출(-) → 약세 신호
 - 마진잔액 극고점 + 펀드 순유출 → 조정 위험
 
-#### 3. 귀금속 선물 시세 (금/은/구리)
-**데이터 출처**: COMEX Futures (CME)
-- 금(GC): USD/troy oz
-- 은(SI): USD/troy oz  
-- 구리(HG): USD/lb
+#### 3. 귀금속 선물 시세 (COMEX Futures)
+**데이터 출처**: 
+- 🔗 **CME Group 공식** (www.cmegroup.com) - 실시간 시세
+- 🔗 **Trading Economics** (tradingeconomics.com/commodities) - 역사 데이터 + 차트
+- 🔗 **Yahoo Finance** (finance.yahoo.com) - GC=F, SI=F, HG=F 검색
 
-| 기간 | 금(USD/oz) | 은(USD/oz) | 구리(USD/lb) | 신호 |
+**계약 명세**:
+- 금(GC): USD/troy oz (COMEX Gold Futures)
+- 은(SI): USD/troy oz (COMEX Silver Futures)
+- 구리(HG): USD/lb (COMEX Copper Futures)
+
+**수집 기준**:
+- **분기 평균**: 각 분기말 3개월 종가 평균
+- **월별**: 각 월말 종가 (주요 거래일 기준)
+- **주별**: 금요일 마감 종가 (주간 거래 대표값)
+
+| 기간 | 금(GC, USD/oz) | 은(SI, USD/oz) | 구리(HG, USD/lb) | 신호 |
 |------|------|------|------|------|
-| **분기 평균(12개)** | | | | 위험회피 수준 |
-| 2024-Q3 | | | | |
-| 2024-Q4 | | | | |
-| ... | | | | |
+| **분기 평균(12개, 24Q3~26Q2)** | CME에서 조회 | CME에서 조회 | CME에서 조회 | 위험회피 수준 |
+| 2024-Q3 | Trading Econ | Trading Econ | Trading Econ | |
+| 2024-Q4 | 또는 Yahoo | 또는 Yahoo | 또는 Yahoo | |
+| ... | Finance 조회 | Finance 조회 | Finance 조회 | |
 | 2026-Q2 | | | | |
-| **최근분기 월평균** | | | | |
-| 2026년 5월 | | | | |
+| **최근분기(26Q2) 월별** | | | | |
+| 2026년 5월 | 월말 종가 | 월말 종가 | 월말 종가 | |
 | 2026년 6월 | | | | |
 | 2026년 7월 | | | | |
-| **최근 1개월 주평균** | | | | |
-| 7월 1~2주 | | | | |
+| **최근 1개월(7월) 주별** | | | | |
+| 7월 1~2주 | 금요일 마감 | 금요일 마감 | 금요일 마감 | |
 | 7월 3~4주 | | | | |
 
-**해석**: 금/은 급등 → 위험회피. 구리 하락 → 경기 약세
+**해석**: 
+- 금/은 선물 급등 → 시장 불안심리 신호 (위험회피 자산 수요 ↑)
+- 구리 선물 하락 → 경기 약세 신호 (수요 감소)
 
 #### 4. 장단기 금리 스프레드 (시장 신뢰도)
 **데이터 출처**: FRED(미국), 한국은행(한국), Bloomberg
