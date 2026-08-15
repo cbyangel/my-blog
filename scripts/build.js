@@ -110,6 +110,7 @@ function build() {
 
   const files = walk(CONTENT).filter(f => extname(f) === '.md');
   const posts = [];
+  const missingAssets = []; // 글이 참조하지만 실제로 없는 로컬 이미지(깨진 차트) 수집
 
   for (const file of files) {
     const raw = readFileSync(file, 'utf-8');
@@ -142,7 +143,22 @@ function build() {
       }
     }
 
+    // 참조된 로컬 이미지가 실제로 존재하는지 검사 (깨진 차트 발행 방지)
+    for (const m of content.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)) {
+      const src = m[1];
+      if (/^(https?:|data:|\/)/.test(src)) continue; // 외부/절대경로는 건너뜀
+      // 글 HTML은 dist/posts/{slug}.html → 상대경로는 dist/posts/ 기준
+      if (!existsSync(join(outDir, src))) missingAssets.push(`${slug}.md → ${src}`);
+    }
+
     posts.push({ slug, title, date, week, description: data.description || '', tags: tagList });
+  }
+
+  // 이미지 게이트: 깨진 차트가 하나라도 있으면 발행 중단
+  if (missingAssets.length) {
+    console.error('✗ 이미지 검사 실패: 글이 참조하는 아래 이미지 파일이 없습니다(깨진 차트). 발행을 중단합니다.');
+    missingAssets.forEach(v => console.error('  - ' + v));
+    throw new Error(`missing ${missingAssets.length} referenced image(s)`);
   }
 
   // 최신순 정렬 (date 문자열 YYYY-MM-DD 기준)
