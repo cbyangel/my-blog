@@ -12,3 +12,6 @@ data/portfolio*
 연금펀드*
 *연금*.xlsx
 *연금*.csv
+
+# Jira 작업 로그 스킬(개인용) — 커밋 금지
+.claude/skills/jira-worklog/
