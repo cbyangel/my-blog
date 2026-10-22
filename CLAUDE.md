@@ -26,6 +26,18 @@ HTML/CSS/JS + 마크다운만 사용(프레임워크 없음). 최종 관점은 *
 5. `npm run build` → dist/
 6. 통과 시 커밋 + 푸시 → Pages 배포
 
+## 월간 거시 리포트 (주간과 별개)
+매월 20일 09:00 예약 작업 `monthly-macro-report` 가 무인 실행:
+1. `scripts/macro/fetch_and_chart.py {발행일}` → ECOS·야후 원데이터 수집 + 차트 13종
+   → `content/reports/_parts/{발행일}/macro-data.md` + `charts/`
+2. `agents/macro-monthly.md` 지침으로 본문 집필 (6축 + 종합 판단 + 다음 달 체크리스트)
+3. `content/reports/{발행일}.md` 로 조립, 차트는 `content/reports/{발행일}/charts/`
+4. `npm run build` 통과 시 커밋 + 푸시 → Pages 배포
+- 주간 리포트는 **시장**, 월간 거시는 **펀더멘털**. 역할이 겹치지 않게 쓴다.
+- 발행일을 20일로 잡은 이유: PPI와 은행 가중평균금리가 가장 늦게 들어온다.
+- ECOS 인증키는 저장소에 두지 않는다 — `ECOS_API_KEY` 환경변수 또는 `~/.config/ecos/key`.
+- 거시 데이터 수집은 `MacroEconomy/.venv` 의 파이썬을 쓴다(PublicDataReader·yfinance·matplotlib).
+
 ## 폴더 구조
 ```
 agents/                  서브에이전트 지침 (수정 시 신중)
