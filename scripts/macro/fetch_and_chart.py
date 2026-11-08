@@ -17,6 +17,7 @@ from datetime import date
 warnings.filterwarnings("ignore")
 import matplotlib
 matplotlib.use("Agg")
+import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -62,8 +63,17 @@ def yahoo_session():
 
 
 # ---------------------------------------------------------------- 공통 유틸
-def ecos(code, cycle, start, end):
-    d = api.get_statistic_search(통계표코드=code, 주기=cycle, 검색시작일자=start, 검색종료일자=end)
+def ecos(code, cycle, start, end, tries=4):
+    # ECOS는 가끔 연결을 끊는다(ConnectionReset) — 잠깐 쉬고 재시도
+    for i in range(tries):
+        try:
+            d = api.get_statistic_search(통계표코드=code, 주기=cycle, 검색시작일자=start, 검색종료일자=end)
+            break
+        except Exception as e:
+            if i == tries - 1:
+                raise
+            print(f"  ECOS {code} 재시도 {i + 1}: {type(e).__name__}")
+            time.sleep(5 * (i + 1))
     d["값"] = pd.to_numeric(d["값"], errors="coerce")
     return d
 
@@ -147,7 +157,9 @@ def main():
     n, r = ecos("200Y107", "Q", qs, qe), ecos("200Y108", "Q", qs, qe)
     pn, pr = pv(n), pv(r)
     g = "국내총생산에 대한 지출"
-    fresh["GDP"] = pr.index.max()
+    # 실질(속보)이 명목보다 한 분기 먼저 나오는 달이 있다 — 시점을 따로 기록한다
+    fresh["GDP(실질)"] = pr.index.max()
+    fresh["GDP(명목)"] = pn.index.max()
 
     section("1. GDP")
     cols = ["최종소비지출", "가계", "정부", "총자본형성", "건설투자", "설비투자",
@@ -158,7 +170,7 @@ def main():
 
     defl = pn[g] / pr[g] * 100
     table(pd.DataFrame({"디플레이터": defl.round(2),
-                        "전년동기비%": (defl.pct_change(4) * 100).round(2)}).tail(8),
+                        "전년동기비%": (defl.pct_change(4, fill_method=None) * 100).round(2)}).tail(8),
           "GDP 디플레이터")
 
     base = pr[g].shift(1)
@@ -179,9 +191,10 @@ def main():
 
     # 차트 01
     real_y, nom_y = pr[g].pct_change(4) * 100, pn[g].pct_change(4) * 100
-    defl_y = defl.pct_change(4) * 100
+    defl_y = defl.pct_change(4, fill_method=None) * 100
     w = real_y.index[-18:]
     fig, ax = plt.subplots(figsize=(11, 5))
+    nom_y, defl_y = nom_y.reindex(w), defl_y.reindex(w)  # 명목 미공표 분기는 NaN(공백)
     ax.bar(w, defl_y[w], color=WARN, alpha=.35, label="GDP 디플레이터 (전년동기비)", width=.6)
     ax.plot(w, real_y[w], color=ACC, marker="o", ms=4, lw=2.2, label="실질 GDP (전년동기비)")
     ax.plot(w, nom_y[w], color=NEG, marker="o", ms=4, lw=2.2, label="명목 GDP (전년동기비)")
@@ -374,6 +387,10 @@ def main():
 
     # 차트 08
     w = cpi_y.index[-22:]
+    # CPI가 PPI보다 한 달 먼저 나오는 달이 있다 — 없는 달은 NaN(공백)
+    ppi_y = ppi_y.reindex(w)
+    if core_y is not None:
+        core_y = core_y.reindex(w)
     fig, ax = plt.subplots(figsize=(11, 5))
     ax.fill_between(w, cpi_y[w], ppi_y[w], color=NEG, alpha=.13, label="PPI - CPI 격차")
     ax.plot(w, ppi_y[w], color=NEG, marker="o", ms=4, lw=2.4, label="생산자물가(PPI)")
