@@ -59,6 +59,9 @@ dist/                    빌드 결과(배포 대상, .gitignore)
 - **표기**: 목록·글에 ISO 주차("YYYY년 N주차")를 앞세워 표시(빌드가 date로 자동 계산). 디자인은 **라이트 모드 고정**(다크 미사용).
 - **차트**: matplotlib PNG. 발행 글 이미지는 `content/reports/{날짜}/`에 두고 상대경로로 삽입.
 - `.docx`/PDF/통합본 파일 생성 없음 — 블로그 글 자체가 리포트.
+- **계좌 운용 방식 분리**: 연금저축·IRP·퇴직연금 = 자산배분 + 리밸런싱(하락 = 리밸런싱 기회, 추세로 매매 판단 안 함), ISA = 추세추종. 상세 `agents/etf-analysis.md` 0장.
+- **글 구성**: 요약(한눈에) → 상세 설명 → 용어 풀이. 쉬운 말·결론 먼저. 규칙 `agents/_style.md`, 용어 사전 `agents/glossary.md`.
+- 포트폴리오 파싱·비율 계산은 `scripts/pf-tools/parse_sheet.py`, `scripts/pf-tools/metrics.py`(출력은 비율만).
 - 프레임워크 추가 금지. 외부 라이브러리 최소화(marked, gray-matter만).
 - 모바일 가독 필수(표는 가로 스크롤).
 
