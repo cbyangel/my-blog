@@ -12,7 +12,7 @@
 """
 import os, sys, json, warnings
 from pathlib import Path
-from datetime import date
+from datetime import date, timedelta
 
 warnings.filterwarnings("ignore")
 import matplotlib
@@ -416,6 +416,21 @@ def main():
         if c in tbl.columns:
             tbl["스프레드_" + c] = tbl[c] - tbl["기준금리"]
     table(tbl.tail(14).round(2), "기준금리 vs 은행 대출금리(%)")
+
+    # 월 계열은 월중 결정(예: 11/26 인상)을 다음 달에야 담는다 — 일별 계열로 최근 변경을 따로 잡는다
+    d_end = PUB_DATE.replace("-", "")
+    d_start = (date.fromisoformat(PUB_DATE) - timedelta(days=400)).strftime("%Y%m%d")
+    kd = ecos("722Y001", "D", d_start, d_end)
+    kd = kd[kd["통계항목명1"] == "한국은행 기준금리"].set_index("시점")["값"].sort_index().dropna()
+    if len(kd):
+        chg = kd[kd.diff().fillna(0) != 0]
+        ev = pd.DataFrame({"변경 후(%)": chg, "변경 폭(%p)": kd.diff()[chg.index]})
+        ev.index = [pd.to_datetime(i).strftime("%Y-%m-%d") for i in ev.index]
+        last = pd.to_datetime(kd.index.max()).strftime("%Y-%m-%d")
+        fresh["기준금리(일별)"] = last
+        md.append(f"\n**기준금리 일별 최신값: {kd.iloc[-1]:.2f}% ({last})** — 월 계열 최신({kr.index.max()})과 다르면 월중 결정이 있었다는 뜻이다.\n")
+        if len(ev):
+            table(ev.round(2), "기준금리 변경 이력(최근 400일, 일별 계열)")
 
     fm = ecos("902Y006", "M", ms, me)
     fm = fm[fm["통계항목명1"].isin(["미국", "유로 지역", "일본", "중국", "한국"])]
